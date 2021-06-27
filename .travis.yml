@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t svkmsr6/docker-mc-app -f ./client/Dockerfile.dev .
+
+script:
+  - docker run svkmsr6/docker-mc-app npm test -- --coverage
+
+after_success:
+  - docker build -t svkmsr6/multi-client ./client
+  - docker build -t svkmsr6/multi-nginx ./nginx
+  - docker build -t svkmsr6/multi-server ./server
+  - docker build -t svkmsr6/multi-worker ./worker
+  #Login using Docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  #Take the images and push them to Dockerhub
+  - docker push svkmsr6/multi-client
+  - docker push svkmsr6/multi-nginx
+  - docker push svkmsr6/multi-server
+  - docker push svkmsr6/multi-worker
