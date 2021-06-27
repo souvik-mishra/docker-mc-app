@@ -1,4 +1,5 @@
 sudo: required
+language: generic
 services:
   - docker
 
@@ -6,7 +7,7 @@ before_install:
   - docker build -t svkmsr6/docker-mc-app -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run svkmsr6/docker-mc-app npm test -- --coverage
+  - docker run -e CI=true svkmsr6/docker-mc-app npm test -- --coverage
 
 after_success:
   - docker build -t svkmsr6/multi-client ./client
