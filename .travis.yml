@@ -21,3 +21,15 @@ after_success:
   - docker push svkmsr6/multi-nginx
   - docker push svkmsr6/multi-server
   - docker push svkmsr6/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: 'ap-south-1'
+  app: 'docker-m-app'
+  env: 'Dockermapp-env'
+  bucket_name: 'elasticbeanstalk-ap-south-1-424035822307'
+  bucket_path: 'docker-multi'
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
